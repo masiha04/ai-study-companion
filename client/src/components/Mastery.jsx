@@ -12,7 +12,7 @@ function Mastery({ project, onBack }) {
                 setError("");
 
                 const response = await fetch(
-                    `http://localhost:5000/api/mastery/${project._id}`,
+                    `${import.meta.env.VITE_API_URL}/api/mastery/${project._id}`,
                     {
                         headers: {
                             Authorization:

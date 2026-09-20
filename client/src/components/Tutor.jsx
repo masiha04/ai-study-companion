@@ -20,7 +20,7 @@ function Tutor({ project, onBack }) {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/tutor/${project._id}`,
+                `${import.meta.env.VITE_API_URL}/api/tutor/${project._id}`,
                 {
                     method: "POST",
                     headers: {

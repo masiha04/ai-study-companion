@@ -16,7 +16,7 @@ function Spaces({ onSelectSpace }) {
                 const token = localStorage.getItem("token");
 
                 const response = await fetch(
-                    "http://localhost:5000/api/spaces",
+                    `${import.meta.env.VITE_API_URL}/api/spaces`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -58,7 +58,7 @@ function Spaces({ onSelectSpace }) {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                "http://localhost:5000/api/spaces",
+                `${import.meta.env.VITE_API_URL}/api/spaces`,
                 {
                     method: "POST",
                     headers: {

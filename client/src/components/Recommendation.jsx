@@ -13,7 +13,7 @@ function Recommendation({ project, onBack }) {
                 setError("");
 
                 const response = await fetch(
-                    `http://localhost:5000/api/recommendations/${project._id}`,
+                    `${import.meta.env.VITE_API_URL}/api/recommendations/${project._id}`,
                     {
                         headers: {
                             Authorization:
@@ -62,7 +62,7 @@ function Recommendation({ project, onBack }) {
             setError("");
 
             const response = await fetch(
-                `http://localhost:5000/api/recommendations/generate/${project._id}`,
+                `${import.meta.env.VITE_API_URL}/api/recommendations/generate/${project._id}`,
                 {
                     method: "POST",
                     headers: {

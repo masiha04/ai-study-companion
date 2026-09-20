@@ -16,7 +16,7 @@ function ProjectList({ space, onSelectProject, onBack }) {
                 const token = localStorage.getItem("token");
 
                 const response = await fetch(
-                    `http://localhost:5000/api/projects/space/${space._id}`,
+                    `${import.meta.env.VITE_API_URL}/api/projects/space/${space._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -57,7 +57,7 @@ function ProjectList({ space, onSelectProject, onBack }) {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                "http://localhost:5000/api/projects",
+                `${import.meta.env.VITE_API_URL}/api/projects`,
                 {
                     method: "POST",
                     headers: {

@@ -16,7 +16,7 @@ function Quiz({ project, onBack, onResult }) {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                `http://localhost:5000/api/quizzes/generate/${project._id}`,
+                `${import.meta.env.VITE_API_URL}/api/quizzes/generate/${project._id}`,
                 {
                     method: "POST",
                     headers: {
@@ -80,7 +80,7 @@ function Quiz({ project, onBack, onResult }) {
             );
 
             const response = await fetch(
-                `http://localhost:5000/api/assessments/submit/${quiz._id}`,
+                `${import.meta.env.VITE_API_URL}/api/assessments/submit/${quiz._id}`,
                 {
                     method: "POST",
                     headers: {

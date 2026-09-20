@@ -19,7 +19,7 @@ function Materials({ project, onBack }) {
                     localStorage.getItem("token");
 
                 const response = await fetch(
-                    `http://localhost:5000/api/materials/${project._id}`,
+                    `${import.meta.env.VITE_API_URL}/api/materials/${project._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -105,7 +105,7 @@ function Materials({ project, onBack }) {
             );
 
             const response = await fetch(
-                `http://localhost:5000/api/materials/${project._id}`,
+                `${import.meta.env.VITE_API_URL}/api/materials/${project._id}`,
                 {
                     method: "POST",
 

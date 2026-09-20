@@ -29,7 +29,7 @@ function ProjectDashboard({
                     analyticsResponse
                 ] = await Promise.all([
                     fetch(
-                        `http://localhost:5000/api/mastery/${project._id}`,
+                        `${import.meta.env.VITE_API_URL}/api/mastery/${project._id}`,
                         {
                             headers: {
                                 Authorization:
@@ -39,7 +39,7 @@ function ProjectDashboard({
                     ),
 
                     fetch(
-                        `http://localhost:5000/api/recommendations/${project._id}`,
+                        `${import.meta.env.VITE_API_URL}/api/recommendations/${project._id}`,
                         {
                             headers: {
                                 Authorization:
@@ -49,7 +49,7 @@ function ProjectDashboard({
                     ),
 
                     fetch(
-                        `http://localhost:5000/api/analytics/project/${project._id}`,
+                        `${import.meta.env.VITE_API_URL}/api/analytics/project/${project._id}`,
                         {
                             headers: {
                                 Authorization:
