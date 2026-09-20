@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 const Material = require("../models/Material");
 const Project = require("../models/Project");
@@ -18,17 +19,36 @@ const {
 const router = express.Router();
 
 // ===============================
+// UPLOAD DIRECTORY
+// ===============================
+
+const uploadDirectory = path.join(
+    __dirname,
+    "..",
+    "uploads"
+);
+
+// Create uploads directory if it does not exist
+if (!fs.existsSync(uploadDirectory)) {
+    fs.mkdirSync(uploadDirectory, {
+        recursive: true
+    });
+}
+
+// ===============================
 // MULTER CONFIGURATION
 // ===============================
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads/");
+        cb(null, uploadDirectory);
     },
 
     filename: (req, file, cb) => {
         const uniqueName =
-            Date.now() + "-" + file.originalname;
+            Date.now() +
+            "-" +
+            file.originalname;
 
         cb(null, uniqueName);
     }
@@ -41,7 +61,11 @@ const upload = multer({
         if (file.mimetype === "application/pdf") {
             cb(null, true);
         } else {
-            cb(new Error("Only PDF files are allowed"));
+            cb(
+                new Error(
+                    "Only PDF files are allowed"
+                )
+            );
         }
     }
 });
@@ -69,13 +93,16 @@ const processMaterial = async (
         // EXTRACT PDF TEXT
         // ===============================
 
-        const pages = await extractTextFromPDF(filePath);
+        const pages =
+            await extractTextFromPDF(filePath);
 
         const extractedText = pages
             .map(page => page.text)
             .join("\n\n");
 
-        material.extractedText = extractedText;
+        material.extractedText =
+            extractedText;
+
         await material.save();
 
         // ===============================
@@ -86,7 +113,8 @@ const processMaterial = async (
         let globalChunkIndex = 0;
 
         for (const page of pages) {
-            const pageChunks = chunkText(page.text);
+            const pageChunks =
+                chunkText(page.text);
 
             const pageChunkDocuments =
                 pageChunks.map(text => ({
@@ -148,6 +176,7 @@ const processMaterial = async (
         // ===============================
 
         material.status = "ready";
+
         await material.save();
 
         console.log(
@@ -157,10 +186,11 @@ const processMaterial = async (
     } catch (error) {
         console.error(
             "Background PDF processing error:",
-            error.message
+            error
         );
 
         material.status = "failed";
+
         await material.save();
     }
 };
@@ -172,11 +202,13 @@ const processMaterial = async (
 router.post(
     "/:projectId",
     authMiddleware,
+
     upload.single("file"),
 
     async (req, res) => {
         try {
-            const { projectId } = req.params;
+            const { projectId } =
+                req.params;
 
             // ===============================
             // CHECK PDF EXISTS
@@ -275,7 +307,7 @@ router.post(
         } catch (error) {
             console.error(
                 "Material upload error:",
-                error.message
+                error
             );
 
             return res.status(500).json({
@@ -296,7 +328,8 @@ router.get(
 
     async (req, res) => {
         try {
-            const { projectId } = req.params;
+            const { projectId } =
+                req.params;
 
             // ===============================
             // CHECK PROJECT OWNERSHIP
@@ -334,7 +367,7 @@ router.get(
         } catch (error) {
             console.error(
                 "Get materials error:",
-                error.message
+                error
             );
 
             return res.status(500).json({
@@ -345,4 +378,35 @@ router.get(
     }
 );
 
+// ===============================
+// MULTER / UPLOAD ERROR HANDLER
+// ===============================
+
+router.use(
+    (error, req, res, next) => {
+        console.error(
+            "Material route error:",
+            error
+        );
+
+        if (
+            error instanceof multer.MulterError
+        ) {
+            return res.status(400).json({
+                message:
+                    `Upload error: ${error.message}`
+            });
+        }
+
+        if (error) {
+            return res.status(400).json({
+                message:
+                    error.message ||
+                    "File upload failed"
+            });
+        }
+
+        next();
+    }
+);
 module.exports = router;
