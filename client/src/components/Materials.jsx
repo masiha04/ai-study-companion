@@ -117,7 +117,26 @@ function Materials({ project, onBack }) {
                 }
             );
 
-            const data = await response.json();
+            /*
+             * Read the response as text first.
+             * This prevents JSON.parse from hiding
+             * the actual server error.
+             */
+            const responseText =
+                await response.text();
+
+            let data = null;
+
+            try {
+                data = JSON.parse(responseText);
+            } catch {
+                throw new Error(
+                    `Server returned ${response.status}: ${
+                        responseText.slice(0, 300) ||
+                        "Empty response"
+                    }`
+                );
+            }
 
             if (!response.ok) {
                 throw new Error(
@@ -136,10 +155,11 @@ function Materials({ project, onBack }) {
             setSelectedFile(null);
 
             setMessage(
-                "PDF uploaded and processed successfully."
+                "PDF uploaded successfully. Processing has started."
             );
 
             event.target.reset();
+
         } catch (error) {
             console.error(
                 "Upload error:",
@@ -147,6 +167,7 @@ function Materials({ project, onBack }) {
             );
 
             setError(error.message);
+
         } finally {
             setUploading(false);
         }
