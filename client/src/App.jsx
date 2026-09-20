@@ -218,11 +218,13 @@ function App() {
 
     return (
         <div className="app">
-            <Spaces
-                onSelectSpace={(space) => {
-                    setSelectedSpace(space);
-                }}
-            />
+           <Spaces
+    onSelectSpace={(space) => {
+        setSelectedSpace(space);
+    }}
+    onLogout={logout}
+/>
+            
         </div>
     );
 }

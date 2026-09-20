@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Spaces({ onSelectSpace }) {
+function Spaces({ onSelectSpace, onLogout }) {
     const [spaces, setSpaces] = useState([]);
 
     const [name, setName] = useState("");
@@ -107,6 +107,7 @@ function Spaces({ onSelectSpace }) {
         <div className="spaces-page">
 
             <div className="spaces-header">
+
                 <div>
                     <h1>My Learning Spaces</h1>
 
@@ -115,6 +116,14 @@ function Spaces({ onSelectSpace }) {
                         focused areas.
                     </p>
                 </div>
+
+                <button
+                    className="logout-button"
+                    onClick={onLogout}
+                >
+                    Logout
+                </button>
+
             </div>
 
             <section className="create-space-card">
